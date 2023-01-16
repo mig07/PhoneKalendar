@@ -1,16 +1,13 @@
 package view.form
 
-import entity.DetailedContact
-import entity.Identification
-import entity.Numbers
 import javafx.beans.property.SimpleObjectProperty
 import javafx.geometry.Pos
 import tornadofx.*
 import viewModel.ContactViewModel
 
-const val WINDOW_FUNCTION = "Add new contact"
+const val UPDATE_WINDOW_NAME = "Update contact"
 
-class ContactCreationWindow : View(WINDOW_FUNCTION) {
+class ContactUpdateWindow : View(UPDATE_WINDOW_NAME) {
 
     private val contactViewModel: ContactViewModel by inject()
 
@@ -36,15 +33,11 @@ class ContactCreationWindow : View(WINDOW_FUNCTION) {
             }
         }
 
-        button("Create").action {
-            contactViewModel.createContact(
-                DetailedContact(
-                    identification = Identification(
-                        firstName.value,
-                        lastName.value
-                    ), numbers = Numbers(mainNumber = mainPhoneNumber.value, null)
-                )
-            )
+        button("Update").action {
+            // TODO
+            /*contactViewModel.updateSelectedContact(
+
+            )*/
             contactViewModel.setTableContacts()
             close()
         }
