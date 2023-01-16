@@ -1,25 +1,30 @@
 package viewModel
 
-import model.ContactDetailModel
-import model.ContactTableModel
+import contactsDao
+import entity.DetailedContact
+import entity.TableContact
+import javafx.collections.ObservableList
+import mappers.ContactMappers
 import tornadofx.ViewModel
-import tornadofx.asObservable
+import tornadofx.observableListOf
 
 class ContactViewModel : ViewModel() {
-    val contactsTableLiveData = getTableContacts().asObservable()
-    var selectedTableContactModel: String = ""
+    val contactMappers = ContactMappers()
+    var contactsTableLiveData: ObservableList<TableContact> = observableListOf()
+    var selectedTableContactMainNumber: String = ""
 
-    fun createContact(contactModel: ContactDetailModel) {
-        TODO()
+    fun createContact(detailedContact: DetailedContact) {
+        contactsDao.createContact(contactMappers.mapDetailedContactToContact(detailedContact))
     }
-
 
     // TODO catch exception
-    fun readSelectedContact(): ContactDetailModel {
-        TODO()
+    fun readSelectedContact(): DetailedContact {
+        return contactMappers.mapContactToDetailedContact(
+            contactsDao.readContact(selectedTableContactMainNumber) ?: throw Exception("Contact not found")
+        )
     }
 
-    fun updateSelectedContact(contactModel: ContactDetailModel) {
+    fun updateSelectedContact(detailedContact: DetailedContact) {
         TODO()
     }
 
@@ -28,7 +33,8 @@ class ContactViewModel : ViewModel() {
     }
 
     // TODO
-    private fun getTableContacts(): List<ContactTableModel> {
-        return emptyList()
+    fun setTableContacts() {
+        val tableContacts = contactMappers.mapListContactToListTableContact(contactsDao.readContacts())
+        contactsTableLiveData.setAll(tableContacts)
     }
 }

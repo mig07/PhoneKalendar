@@ -3,7 +3,8 @@ package dataAccess
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
-import dto.ContactDto
+import model.Contact
+import model.Contacts
 import tornadofx.runAsync
 import java.io.File
 
@@ -17,24 +18,24 @@ class ContactsDao {
     private val contactsFile = File(CONTACTS_DATA_FILE)
 
     // Read the file where contacts are stored
-    private var contactAgenda: MutableList<ContactDto> = jsonMapper.readValue(contactsFile)
+    private var contactAgenda: Contacts = jsonMapper.readValue(contactsFile)
 
-    fun createContact(contactModel: ContactDto) {
+    fun createContact(contactModel: Contact) {
         val mainPhoneNumber = contactModel.phoneNumbers.mainNumber
-        if (this.contactAgenda.find { it.phoneNumbers.mainNumber === mainPhoneNumber } != null) {
+        if (this.contactAgenda.contacts.find { it.phoneNumbers.mainNumber === mainPhoneNumber } != null) {
             println("The contact with number $mainPhoneNumber already exists!")
             return
         }
-        this.contactAgenda.add(contactModel)
+        this.contactAgenda.contacts.add(contactModel)
         writeToFileAsync()
     }
 
-    fun readContacts(): Iterable<ContactDto> = this.contactAgenda
+    fun readContacts(): Iterable<Contact> = this.contactAgenda.contacts
 
     fun readContact(mainPhoneNumber: String) =
-        this.contactAgenda.find { contact -> contact.phoneNumbers.mainNumber === mainPhoneNumber }
+        this.contactAgenda.contacts.find { contact -> contact.phoneNumbers.mainNumber === mainPhoneNumber }
 
-    fun updateContact(mainPhoneNumber: String, contactDto: ContactDto) {
+    fun updateContact(mainPhoneNumber: String, contactDto: Contact) {
         removeIfExists(mainPhoneNumber)
         createContact(contactDto)
     }
@@ -45,7 +46,7 @@ class ContactsDao {
     }
 
     private fun removeIfExists(mainPhoneNumber: String) {
-        if (!this.contactAgenda.removeIf { contact -> contact.phoneNumbers.mainNumber === mainPhoneNumber }) {
+        if (!this.contactAgenda.contacts.removeIf { contact -> contact.phoneNumbers.mainNumber === mainPhoneNumber }) {
             println("Contact with number $mainPhoneNumber does not exist")
             return
         }
