@@ -11,7 +11,11 @@ class Identification(
     val lastName: String,
     val middleNames: List<String>? = null,
     val nickName: String? = null
-)
+) {
+    override fun toString(): String {
+        return "$firstName ${middleNames?.map { it } ?: ""} $lastName"
+    }
+}
 
 class Numbers(
     val mainNumber: String,

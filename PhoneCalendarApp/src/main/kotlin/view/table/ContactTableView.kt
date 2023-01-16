@@ -1,10 +1,7 @@
 package view.table
 
 import entity.TableContact
-import tornadofx.View
-import tornadofx.onUserSelect
-import tornadofx.readonlyColumn
-import tornadofx.tableview
+import tornadofx.*
 import viewModel.ContactViewModel
 
 class ContactTableView : View() {
@@ -14,9 +11,10 @@ class ContactTableView : View() {
     override val root = tableview(
         contactViewModel.contactsTableLiveData
     ) {
-        contactViewModel.setTableContacts()
+        contactViewModel.setTableContactsLiveData()
+        readonlyColumn("Main phone", TableContact::mainPhone)
         readonlyColumn("First name", TableContact::firstName)
         readonlyColumn("Last name", TableContact::lastName)
-        readonlyColumn("Main phone", TableContact::mainPhone)
+        onSelectionChange { contactViewModel.setSelectedContact(it) }
     }
 }

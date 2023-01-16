@@ -37,15 +37,14 @@ class ContactCreationWindow : View(WINDOW_FUNCTION) {
         }
 
         button("Create").action {
-            contactViewModel.createContact(
-                DetailedContact(
-                    identification = Identification(
-                        firstName.value,
-                        lastName.value
-                    ), numbers = Numbers(mainNumber = mainPhoneNumber.value, null)
-                )
+            val detailedContact = DetailedContact(
+                identification = Identification(
+                    firstName.value,
+                    lastName.value
+                ), numbers = Numbers(mainNumber = mainPhoneNumber.value, null)
             )
-            contactViewModel.setTableContacts()
+            contactViewModel.createContact(detailedContact)
+            contactViewModel.setTableContactsLiveData()
             close()
         }
     }

@@ -1,13 +1,11 @@
 package view
 
-import tornadofx.View
-import tornadofx.button
-import tornadofx.hbox
+import tornadofx.*
 import view.form.ContactCreationWindow
 import view.form.ContactUpdateWindow
 import viewModel.ContactViewModel
 
-class AppButtonsView: View() {
+class AppButtonsView : View() {
 
     private val contactViewModel: ContactViewModel by inject()
 
@@ -16,13 +14,16 @@ class AppButtonsView: View() {
             ContactCreationWindow().openWindow()
         }
 
-        button("Delete contact").setOnAction {
-            contactViewModel.removeSelectedContact()
-            contactViewModel.setTableContacts()
-        }
+        button("Delete contact")
+            .setOnAction {
+                if (contactViewModel.selectedDetailedContact != null)
+                    contactViewModel.removeSelectedContact()
+            }
 
-        button("Update contact").setOnAction {
-            ContactUpdateWindow().openWindow()
-        }
+        button("Update contact")
+            .setOnAction {
+                if (contactViewModel.selectedDetailedContact != null)
+                    ContactUpdateWindow().openWindow()
+            }
     }
 }

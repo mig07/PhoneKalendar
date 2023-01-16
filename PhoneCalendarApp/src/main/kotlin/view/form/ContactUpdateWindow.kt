@@ -1,5 +1,9 @@
 package view.form
 
+import entity.DetailedContact
+import entity.Emails
+import entity.Identification
+import entity.Numbers
 import javafx.beans.property.SimpleObjectProperty
 import javafx.geometry.Pos
 import tornadofx.*
@@ -11,9 +15,11 @@ class ContactUpdateWindow : View(UPDATE_WINDOW_NAME) {
 
     private val contactViewModel: ContactViewModel by inject()
 
-    private var firstName = SimpleObjectProperty<String>()
-    private var lastName = SimpleObjectProperty<String>()
-    private var mainPhoneNumber = SimpleObjectProperty<String>()
+    val selectedContact = contactViewModel.selectedDetailedContact!!
+
+    private var firstName = SimpleObjectProperty(selectedContact.identification.firstName)
+    private var lastName = SimpleObjectProperty(selectedContact.identification.lastName)
+    private var mainPhoneNumber = SimpleObjectProperty(selectedContact.numbers.mainNumber)
 
     override val root = form {
         alignment = Pos.CENTER;
@@ -34,11 +40,20 @@ class ContactUpdateWindow : View(UPDATE_WINDOW_NAME) {
         }
 
         button("Update").action {
-            // TODO
-            /*contactViewModel.updateSelectedContact(
-
-            )*/
-            contactViewModel.setTableContacts()
+            val updatedContact = DetailedContact(
+                identification = Identification(
+                    firstName = firstName.value,
+                    lastName = lastName.value,
+                    middleNames = null,
+                    nickName = null
+                ),
+                numbers = Numbers(
+                    mainNumber = mainPhoneNumber.value,
+                    numbers = null
+                ),
+                emails = Emails(null)
+            )
+            contactViewModel.updateSelectedContact(updatedContact)
             close()
         }
     }

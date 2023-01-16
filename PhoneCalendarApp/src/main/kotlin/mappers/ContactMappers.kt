@@ -11,13 +11,24 @@ class ContactMappers {
         mapContactToTableContact(contact)
     }.toList()
 
-    fun mapContactToTableContact(contact: Contact) =
+    private fun mapContactToTableContact(contact: Contact) =
         TableContact(
             firstName = contact.identificationSection.firstName,
             lastName = contact.identificationSection.lastName,
             mainPhone = contact.phoneNumbers.mainNumber
         )
 
+    fun mapDetailedContactToTableContact(contact: DetailedContact) =
+        TableContact(
+            firstName = contact.identification.firstName,
+            lastName = contact.identification.lastName,
+            mainPhone = contact.numbers.mainNumber
+        )
+
+    /**
+     * For consistency reasons: mapContactToDetailedContact and mapDetailedContactToContact do the same for thing for now,
+     * but it may change in the future
+     */
     fun mapContactToDetailedContact(contact: Contact) =
         DetailedContact(
             identification = Identification(

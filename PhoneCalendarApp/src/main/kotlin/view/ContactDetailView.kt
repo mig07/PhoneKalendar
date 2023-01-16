@@ -1,10 +1,16 @@
 package view
 
+import exception.ContactNotFoundException
 import tornadofx.*
-class ContactDetailView: View() {
+import viewModel.ContactViewModel
 
-    override val root = borderpane {
-        left = label("Full name")
+class ContactDetailView : View() {
+
+    private val contactViewModel: ContactViewModel by inject()
+
+    override val root = vbox {
+        label("Full name: ${contactViewModel.selectedDetailedContact?.identification ?: throw ContactNotFoundException()}")
+        label("Main phone number: ${contactViewModel.selectedDetailedContact?.numbers?.mainNumber ?: throw ContactNotFoundException()}")
     }
 }
 
