@@ -6,6 +6,7 @@ import com.fasterxml.jackson.module.kotlin.readValue
 import model.Contact
 import model.Contacts
 import tornadofx.runAsync
+import tornadofx.ui
 import java.io.File
 
 const val CONTACTS_DATA_FILE = "./config/data.json"
@@ -20,14 +21,14 @@ class ContactsDao {
     // Read the file where contacts are stored
     private var contactAgenda: Contacts = jsonMapper.readValue(contactsFile)
 
-    fun createContact(contact: Contact) {
+    fun createContact(contact: Contact, onSuccess: () -> Any = {}) {
         val mainPhoneNumber = contact.phoneNumbers.mainNumber
         if (this.contactAgenda.contacts.find { it.phoneNumbers.mainNumber === mainPhoneNumber } != null) {
             println("The contact with number $mainPhoneNumber already exists!")
             return
         }
         this.contactAgenda.contacts.add(contact)
-        writeToFileAsync()
+        writeToFileAsync(onSuccess)
     }
 
     fun readContacts(): Iterable<Contact> = this.contactAgenda.contacts
@@ -35,14 +36,15 @@ class ContactsDao {
     fun readContact(mainPhoneNumber: String) =
         this.contactAgenda.contacts.find { contact -> contact.phoneNumbers.mainNumber === mainPhoneNumber }
 
-    fun updateContact(mainPhoneNumber: String, contact: Contact) {
+    fun updateContact(mainPhoneNumber: String, contact: Contact, onSuccess: () -> Any = {}) {
         if (!removeIfExists(mainPhoneNumber)) return
         createContact(contact)
+        writeToFileAsync(onSuccess)
     }
 
-    fun removeContact(mainPhoneNumber: String) {
+    fun removeContact(mainPhoneNumber: String, onSuccess: () -> Any = {}) {
         if (!removeIfExists(mainPhoneNumber)) return
-        writeToFileAsync()
+        writeToFileAsync(onSuccess)
     }
 
     private fun removeIfExists(mainPhoneNumber: String): Boolean {
@@ -50,10 +52,12 @@ class ContactsDao {
     }
 
     // Asynchronous method to write into the contacts file (does not block UI thread)
-    private fun writeToFileAsync() {
+    private fun writeToFileAsync(onSuccess: () -> Any) {
         val contactAgendaJson = jsonMapper.writerWithDefaultPrettyPrinter().writeValueAsString(contactAgenda)
         runAsync {
             contactsFile.writeText(contactAgendaJson)
+        } ui {
+            onSuccess()
         }
     }
 }
