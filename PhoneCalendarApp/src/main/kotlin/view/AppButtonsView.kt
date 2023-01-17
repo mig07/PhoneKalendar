@@ -1,8 +1,8 @@
 package view
 
 import tornadofx.*
-import view.form.ContactCreationWindow
-import view.form.ContactUpdateWindow
+import view.floatingWindow.form.ContactCreationWindow
+import view.floatingWindow.form.ContactUpdateWindow
 import viewModel.ContactViewModel
 
 class AppButtonsView : View() {
@@ -10,20 +10,20 @@ class AppButtonsView : View() {
     private val contactViewModel: ContactViewModel by inject()
 
     override val root = hbox {
-        button("Add contact").setOnAction {
+        button("Create contact").setOnAction {
             ContactCreationWindow().openWindow()
         }
-
-        button("Delete contact")
-            .setOnAction {
-                if (contactViewModel.selectedDetailedContact != null)
-                    contactViewModel.removeSelectedContact()
-            }
 
         button("Update contact")
             .setOnAction {
                 if (contactViewModel.selectedDetailedContact != null)
                     ContactUpdateWindow().openWindow()
+            }
+
+        button("Delete contact")
+            .setOnAction {
+                if (contactViewModel.selectedDetailedContact != null)
+                    contactViewModel.removeSelectedContact()
             }
     }
 }

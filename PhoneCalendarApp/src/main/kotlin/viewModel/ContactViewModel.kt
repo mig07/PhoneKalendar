@@ -14,12 +14,12 @@ class ContactViewModel : ViewModel() {
     var contactsTableLiveData: ObservableList<TableContact> = observableListOf()
     var selectedDetailedContact: DetailedContact? = null
 
-    fun createContact(detailedContact: DetailedContact): Boolean {
+    fun createContact(detailedContact: DetailedContact) {
         if (contactsTableLiveData.find { it.mainPhone == detailedContact.numbers.mainNumber } != null) {
-            return false
+            return
         }
         contactsDao.createContact(contactMappers.mapDetailedContactToContact(detailedContact))
-        return true
+        contactsTableLiveData.add(contactMappers.mapDetailedContactToTableContact(detailedContact))
     }
 
     fun setSelectedContact(tableContact: TableContact?) {
@@ -38,14 +38,13 @@ class ContactViewModel : ViewModel() {
             mainPhoneNumber = selectedDetailedContact!!.numbers.mainNumber,
             contact = contactMappers.mapDetailedContactToContact(detailedContact)
         )
-        setTableContactsLiveData()
     }
 
     fun removeSelectedContact() {
+        // Update live data
+        contactsTableLiveData.remove(contactMappers.mapDetailedContactToTableContact(selectedDetailedContact!!))
         // Remove from config file
         contactsDao.removeContact(selectedDetailedContact!!.numbers.mainNumber)
-        // Update live data
-        setTableContactsLiveData()
     }
 
     fun setTableContactsLiveData() {

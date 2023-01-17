@@ -1,7 +1,10 @@
 package view.table
 
 import entity.TableContact
-import tornadofx.*
+import tornadofx.View
+import tornadofx.onSelectionChange
+import tornadofx.readonlyColumn
+import tornadofx.tableview
 import viewModel.ContactViewModel
 
 class ContactTableView : View() {
@@ -15,6 +18,8 @@ class ContactTableView : View() {
         readonlyColumn("Main phone", TableContact::mainPhone)
         readonlyColumn("First name", TableContact::firstName)
         readonlyColumn("Last name", TableContact::lastName)
-        onSelectionChange { contactViewModel.setSelectedContact(it) }
+        onSelectionChange {
+            contactViewModel.setSelectedContact(it)
+        }
     }
 }
