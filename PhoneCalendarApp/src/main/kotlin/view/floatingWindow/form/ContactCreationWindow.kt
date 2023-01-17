@@ -1,4 +1,4 @@
-package view.form
+package view.floatingWindow.form
 
 import entity.DetailedContact
 import entity.Identification
@@ -19,7 +19,7 @@ class ContactCreationWindow : View(WINDOW_FUNCTION) {
     private var mainPhoneNumber = SimpleObjectProperty<String>()
 
     override val root = form {
-        alignment = Pos.CENTER;
+        alignment = Pos.CENTER
 
         fieldset(WINDOW_FUNCTION) {
 
@@ -44,7 +44,6 @@ class ContactCreationWindow : View(WINDOW_FUNCTION) {
                 ), numbers = Numbers(mainNumber = mainPhoneNumber.value, null)
             )
             contactViewModel.createContact(detailedContact)
-            contactViewModel.setTableContactsLiveData()
             close()
         }
     }

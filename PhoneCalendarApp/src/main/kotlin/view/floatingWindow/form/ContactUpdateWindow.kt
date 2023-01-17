@@ -1,4 +1,4 @@
-package view.form
+package view.floatingWindow.form
 
 import entity.DetailedContact
 import entity.Emails
@@ -22,7 +22,7 @@ class ContactUpdateWindow : View(UPDATE_WINDOW_NAME) {
     private var mainPhoneNumber = SimpleObjectProperty(selectedContact.numbers.mainNumber)
 
     override val root = form {
-        alignment = Pos.CENTER;
+        alignment = Pos.CENTER
 
         fieldset(WINDOW_FUNCTION) {
 
