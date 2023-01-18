@@ -1,3 +1,45 @@
 {
-  "contacts" : []
+  "contacts" : [ {
+    "identificationSection" : {
+      "firstName" : "José",
+      "lastName" : "Silva",
+      "middleNames" : null,
+      "nickName" : null
+    },
+    "phoneNumbers" : {
+      "mainNumber" : "+351 123 456 789",
+      "numbers" : null
+    },
+    "emails" : {
+      "emails" : null
+    }
+  }, {
+    "identificationSection" : {
+      "firstName" : "CTT",
+      "lastName" : "Linha de apoio (particulares)",
+      "middleNames" : null,
+      "nickName" : null
+    },
+    "phoneNumbers" : {
+      "mainNumber" : "+351 210 471 616",
+      "numbers" : null
+    },
+    "emails" : {
+      "emails" : null
+    }
+  }, {
+    "identificationSection" : {
+      "firstName" : "Maria",
+      "lastName" : "Adelaide",
+      "middleNames" : null,
+      "nickName" : null
+    },
+    "phoneNumbers" : {
+      "mainNumber" : "+351 987 654 321",
+      "numbers" : null
+    },
+    "emails" : {
+      "emails" : null
+    }
+  } ]
 }
