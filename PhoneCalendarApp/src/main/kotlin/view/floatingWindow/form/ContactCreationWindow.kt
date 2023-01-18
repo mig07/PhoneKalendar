@@ -8,9 +8,9 @@ import javafx.geometry.Pos
 import tornadofx.*
 import viewModel.ContactViewModel
 
-const val WINDOW_FUNCTION = "Add new contact"
+const val CREATION_WINDOW_NAME = "Add new contact"
 
-class ContactCreationWindow : View(WINDOW_FUNCTION) {
+class ContactCreationWindow : View(CREATION_WINDOW_NAME) {
 
     private val contactViewModel: ContactViewModel by inject()
 
@@ -21,7 +21,7 @@ class ContactCreationWindow : View(WINDOW_FUNCTION) {
     override val root = form {
         alignment = Pos.CENTER
 
-        fieldset(WINDOW_FUNCTION) {
+        fieldset(CREATION_WINDOW_NAME) {
 
             field("First name") {
                 textfield(firstName)

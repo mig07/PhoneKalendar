@@ -14,9 +14,6 @@ class HomeView : View() {
             // Contacts' table
             center<ContactTableView>()
 
-            // Contact's detail
-            right<ContactDetailView>()
-
         } catch (ex: Exception) {
             ex.printStackTrace()
         }

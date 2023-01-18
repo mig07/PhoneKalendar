@@ -1,6 +1,7 @@
 package view
 
 import tornadofx.*
+import view.floatingWindow.detail.ContactDetailView
 import view.floatingWindow.form.ContactCreationWindow
 import view.floatingWindow.form.ContactUpdateWindow
 import viewModel.ContactViewModel
@@ -14,16 +15,19 @@ class AppButtonsView : View() {
             ContactCreationWindow().openWindow()
         }
 
-        button("Update contact")
-            .setOnAction {
-                if (contactViewModel.selectedDetailedContact != null)
-                    ContactUpdateWindow().openWindow()
-            }
+        button("Read contact").setOnAction {
+            if (contactViewModel.selectedDetailedContact != null)
+                ContactDetailView(contactViewModel.selectedDetailedContact!!).openWindow()
+        }
 
-        button("Delete contact")
-            .setOnAction {
-                if (contactViewModel.selectedDetailedContact != null)
-                    contactViewModel.removeSelectedContact()
-            }
+        button("Update contact").setOnAction {
+            if (contactViewModel.selectedDetailedContact != null)
+                ContactUpdateWindow().openWindow()
+        }
+
+        button("Delete contact").setOnAction {
+            if (contactViewModel.selectedDetailedContact != null)
+                contactViewModel.removeSelectedContact()
+        }
     }
 }

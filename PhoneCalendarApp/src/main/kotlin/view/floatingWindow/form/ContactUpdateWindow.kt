@@ -24,7 +24,7 @@ class ContactUpdateWindow : View(UPDATE_WINDOW_NAME) {
     override val root = form {
         alignment = Pos.CENTER
 
-        fieldset(WINDOW_FUNCTION) {
+        fieldset(CREATION_WINDOW_NAME) {
 
             field("First name") {
                 textfield(firstName)
