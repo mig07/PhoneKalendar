@@ -4,7 +4,7 @@ import tornadofx.View
 import tornadofx.borderpane
 import view.table.ContactTableView
 
-class HomeView : View() {
+class HomeView : View("PhoneKalendar") {
 
     override val root = borderpane {
         try {
