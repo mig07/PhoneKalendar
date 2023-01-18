@@ -21,7 +21,7 @@ class ContactsDao {
     // Read the file where contacts are stored
     private var contactAgenda: Contacts = jsonMapper.readValue(contactsFile)
 
-    fun createContact(contact: Contact, onSuccess: () -> Any = {}) {
+    fun createContact(contact: Contact, onSuccess: () -> Unit = {}) {
         val mainPhoneNumber = contact.phoneNumbers.mainNumber
         if (this.contactAgenda.contacts.find { it.phoneNumbers.mainNumber === mainPhoneNumber } != null) {
             println("The contact with number $mainPhoneNumber already exists!")
@@ -36,13 +36,13 @@ class ContactsDao {
     fun readContact(mainPhoneNumber: String) =
         this.contactAgenda.contacts.find { contact -> contact.phoneNumbers.mainNumber === mainPhoneNumber }
 
-    fun updateContact(mainPhoneNumber: String, contact: Contact, onSuccess: () -> Any = {}) {
+    fun updateContact(mainPhoneNumber: String, contact: Contact, onSuccess: () -> Unit = {}) {
         if (!removeIfExists(mainPhoneNumber)) return
         createContact(contact)
         writeToFileAsync(onSuccess)
     }
 
-    fun removeContact(mainPhoneNumber: String, onSuccess: () -> Any = {}) {
+    fun removeContact(mainPhoneNumber: String, onSuccess: () -> Unit = {}) {
         if (!removeIfExists(mainPhoneNumber)) return
         writeToFileAsync(onSuccess)
     }
@@ -52,7 +52,7 @@ class ContactsDao {
     }
 
     // Asynchronous method to write into the contacts file (does not block UI thread)
-    private fun writeToFileAsync(onSuccess: () -> Any) {
+    private fun writeToFileAsync(onSuccess: () -> Unit) {
         val contactAgendaJson = jsonMapper.writerWithDefaultPrettyPrinter().writeValueAsString(contactAgenda)
         runAsync {
             contactsFile.writeText(contactAgendaJson)

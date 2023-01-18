@@ -15,11 +15,16 @@ class ContactViewModel : ViewModel() {
     var selectedDetailedContact: DetailedContact? = null
 
     fun createContact(detailedContact: DetailedContact) {
+        // If the contact already exists, return for now
         if (contactsTableLiveData.find { it.mainPhone == detailedContact.numbers.mainNumber } != null) {
             return
         }
-        contactsDao.createContact(contactMappers.mapDetailedContactToContact(detailedContact))
-        contactsTableLiveData.add(contactMappers.mapDetailedContactToTableContact(detailedContact))
+        // Data source contact creation
+        contactsDao.createContact(contactMappers.mapDetailedContactToContact(detailedContact)) {
+            // Update live data
+            contactsTableLiveData.add(contactMappers.mapDetailedContactToTableContact(detailedContact))
+        }
+
     }
 
     fun setSelectedContact(tableContact: TableContact?) {
@@ -34,17 +39,35 @@ class ContactViewModel : ViewModel() {
     }
 
     fun updateSelectedContact(detailedContact: DetailedContact) {
+        // Mapping passed DetailedContact to TableContact, to update the livedata
+        val updatedTableContact = contactMappers.mapDetailedContactToTableContact(detailedContact)
+
+        // Get index of the contact to be updated inside the livedata
+        val contactToUpdateIndex = contactsTableLiveData.indexOfFirst { tableContact ->
+            tableContact.mainPhone == selectedDetailedContact!!.numbers.mainNumber
+        }
+        // Data source contact update
         contactsDao.updateContact(
             mainPhoneNumber = selectedDetailedContact!!.numbers.mainNumber,
             contact = contactMappers.mapDetailedContactToContact(detailedContact)
-        )
+        ) {
+            // Update live data
+            contactsTableLiveData[contactToUpdateIndex] = updatedTableContact
+        }
+
     }
 
     fun removeSelectedContact() {
-        // Update live data
-        contactsTableLiveData.remove(contactMappers.mapDetailedContactToTableContact(selectedDetailedContact!!))
-        // Remove from config file
-        contactsDao.removeContact(selectedDetailedContact!!.numbers.mainNumber)
+        // Find contact to be removed from live data
+        val contactToRemove = contactsTableLiveData.find { tableContact ->
+            tableContact.mainPhone == selectedDetailedContact!!.numbers.mainNumber
+        }
+        // Data source contact removal
+        contactsDao.removeContact(selectedDetailedContact!!.numbers.mainNumber) {
+            // Update live data
+            contactsTableLiveData.remove(contactToRemove)
+        }
+
     }
 
     fun setTableContactsLiveData() {
