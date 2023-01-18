@@ -19,22 +19,22 @@ class ContactsDao {
     private val contactsFile = File(CONTACTS_DATA_FILE)
 
     // Read the file where contacts are stored
-    private var contactAgenda: Contacts = jsonMapper.readValue(contactsFile)
+    private var contactCalendar: Contacts = jsonMapper.readValue(contactsFile)
 
     fun createContact(contact: Contact, onSuccess: () -> Unit = {}) {
         val mainPhoneNumber = contact.phoneNumbers.mainNumber
-        if (this.contactAgenda.contacts.find { it.phoneNumbers.mainNumber === mainPhoneNumber } != null) {
+        if (this.contactCalendar.contacts.find { it.phoneNumbers.mainNumber === mainPhoneNumber } != null) {
             println("The contact with number $mainPhoneNumber already exists!")
             return
         }
-        this.contactAgenda.contacts.add(contact)
+        this.contactCalendar.contacts.add(contact)
         writeToFileAsync(onSuccess)
     }
 
-    fun readContacts(): Iterable<Contact> = this.contactAgenda.contacts
+    fun readContacts(): Iterable<Contact> = this.contactCalendar.contacts
 
     fun readContact(mainPhoneNumber: String) =
-        this.contactAgenda.contacts.find { contact -> contact.phoneNumbers.mainNumber === mainPhoneNumber }
+        this.contactCalendar.contacts.find { contact -> contact.phoneNumbers.mainNumber === mainPhoneNumber }
 
     fun updateContact(mainPhoneNumber: String, contact: Contact, onSuccess: () -> Unit = {}) {
         if (!removeIfExists(mainPhoneNumber)) return
@@ -48,15 +48,16 @@ class ContactsDao {
     }
 
     private fun removeIfExists(mainPhoneNumber: String): Boolean {
-        return this.contactAgenda.contacts.removeIf { contact -> contact.phoneNumbers.mainNumber === mainPhoneNumber }
+        return this.contactCalendar.contacts.removeIf { contact -> contact.phoneNumbers.mainNumber === mainPhoneNumber }
     }
 
     // Asynchronous method to write into the contacts file (does not block UI thread)
     private fun writeToFileAsync(onSuccess: () -> Unit) {
-        val contactAgendaJson = jsonMapper.writerWithDefaultPrettyPrinter().writeValueAsString(contactAgenda)
+        val contactCalendarJson = jsonMapper.writerWithDefaultPrettyPrinter().writeValueAsString(contactCalendar)
         runAsync {
-            contactsFile.writeText(contactAgendaJson)
+            contactsFile.writeText(contactCalendarJson)
         } ui {
+            // TODO - add onError to handle write errors
             onSuccess()
         }
     }
